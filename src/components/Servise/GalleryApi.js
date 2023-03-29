@@ -5,7 +5,7 @@ const API_KEY = '34125445-1c9917b2e51e42d8e5ff23e92';
 
 export const getSearchGalleryApi = (request, page) => {
   return axios
-    .get('/?per_page=12&', {
+    .get(`/?per_page=12&`, {
       params: {
         key: API_KEY,
         q: request,
@@ -14,7 +14,5 @@ export const getSearchGalleryApi = (request, page) => {
         page,
       },
     })
-    .then(r => r.data.hits);
+    .then(r => r.data);
 };
-
-// image_type=photo&orientation=horizontal&per_page=12

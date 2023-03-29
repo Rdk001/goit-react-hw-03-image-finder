@@ -17,6 +17,8 @@ class ImageGallery extends Component {
     error: null,
     isLoading: false,
     modalData: false,
+
+    totalHits: 0,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -28,6 +30,8 @@ class ImageGallery extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const { page, request } = this.state;
+    console.log(this.state.cards.length);
+    console.log(this.state.totalHits);
 
     if (
       (prevProps.request !== request && request !== '') ||
@@ -43,14 +47,17 @@ class ImageGallery extends Component {
 
     try {
       const data = await getSearchGalleryApi(request, page);
-      if (data.length === 0) {
+      console.log(data.hits);
+      if (data.hits.length === 0) {
         this.setState({ cards: [] });
         toast.error(`no response on request ${request}`);
         throw new Error();
       }
       this.setState(prev => ({
-        cards: page === 1 ? data : [...prev.cards, ...data],
+        cards: page === 1 ? data.hits : [...prev.cards, ...data.hits],
       }));
+
+      this.setState({ totalHits: data.totalHits });
     } catch (error) {
       this.setState({ error: error.message });
     } finally {
@@ -71,7 +78,7 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { cards, error, modalData, isLoading } = this.state;
+    const { cards, error, modalData, isLoading, totalHits } = this.state;
 
     return (
       <>
@@ -92,7 +99,7 @@ class ImageGallery extends Component {
                 })}
             </GalleryList>
 
-            {cards.length > 0 && !isLoading && (
+            {cards.length > 0 && !isLoading && cards.length !== totalHits && (
               <Div>
                 <Button handleIncrement={this.changePage} />
               </Div>
