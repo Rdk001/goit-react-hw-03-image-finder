@@ -20,7 +20,6 @@ class Searchbar extends Component {
     if (this.state.request.trim() === '') {
       return toast.error('enter a query');
     }
-
     this.props.onSubmit(this.state.request);
     e.currentTarget.elements.request.value = '';
   };

@@ -1,5 +1,4 @@
 import { Component } from 'react';
-
 import { toast } from 'react-toastify';
 
 import { GalleryList, Div } from './ImageGallery.styled';
@@ -30,8 +29,6 @@ class ImageGallery extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const { page, request } = this.state;
-    console.log(this.state.cards.length);
-    console.log(this.state.totalHits);
 
     if (
       (prevProps.request !== request && request !== '') ||
@@ -47,7 +44,7 @@ class ImageGallery extends Component {
 
     try {
       const data = await getSearchGalleryApi(request, page);
-      console.log(data.hits);
+
       if (data.hits.length === 0) {
         this.setState({ cards: [] });
         toast.error(`no response on request ${request}`);
@@ -56,7 +53,6 @@ class ImageGallery extends Component {
       this.setState(prev => ({
         cards: page === 1 ? data.hits : [...prev.cards, ...data.hits],
       }));
-
       this.setState({ totalHits: data.totalHits });
     } catch (error) {
       this.setState({ error: error.message });
